@@ -24,6 +24,9 @@ class Vector3D{
   public Vector3D scale(double scalar){
     return new Vector3D(x*scalar,y*scalar,z*scalar);
   }
+  public Vector3D divide(double scalar){
+    return new Vector3D(x/scalar,y/scalar,z/scalar);
+  }
   public Vector3D add(Vector3D v){
     return new Vector3D(x+v.getx(),y+v.gety(),z+v.getz());
   }

@@ -3,7 +3,7 @@ class Icosahedron{
     Vector3D localUp;
     Vector3D axisA;
     Vector3D axisB;
-    Vector3D[] verticesArray;
+    ArrayList<Vector3D> verticesArray;
     int[] triangleArray;
     int radius;
     int recursionAmt;
@@ -16,21 +16,21 @@ class Icosahedron{
     }
     void createMesh(){
         //setting 12 verticies
-        verticesArray = new Vector3D[12];
-        verticesArray[0] = new Vector3D(-1,  t,  0);
-        verticesArray[1] = new Vector3D( 1,  t,  0);
-        verticesArray[2] = new Vector3D(-1, -t,  0);
-        verticesArray[3] = new Vector3D( 1, -t,  0);
+        verticesArray = new ArrayList<Vector3D>();
+        verticesArray.add(new Vector3D(-1,  t,  0));
+        verticesArray.add(new Vector3D( 1,  t,  0));
+        verticesArray.add(new Vector3D(-1, -t,  0));
+        verticesArray.add(new Vector3D( 1, -t,  0));
 
-        verticesArray[4] =  new Vector3D( 0, -1,  t);
-        verticesArray[5] = new Vector3D( 0,  1,  t);
-        verticesArray[6] = new Vector3D( 0, -1, -t);
-        verticesArray[7] = new Vector3D( 0,  1, -t);
+        verticesArray.add(new Vector3D( 0, -1,  t));
+        verticesArray.add( new Vector3D( 0,  1,  t));
+        verticesArray.add( new Vector3D( 0, -1, -t));
+        verticesArray.add( new Vector3D( 0,  1, -t));
 
-        verticesArray[8] = new Vector3D( t,  0, -1);
-        verticesArray[9] = new Vector3D( t,  0,  1);
-        verticesArray[10] = new Vector3D(-t,  0, -1);
-        verticesArray[11] = new Vector3D(-t,  0,  1);
+        verticesArray.add(new Vector3D( t,  0, -1));
+        verticesArray.add(new Vector3D( t,  0,  1));
+        verticesArray.add( new Vector3D(-t,  0, -1));
+        verticesArray.add( new Vector3D(-t,  0,  1));
         //setting the 20 faces
         faces = new ArrayList<TriangleIndices>();
         //first 5 surrounding p1
@@ -62,22 +62,25 @@ class Icosahedron{
         faces.add(new TriangleIndices(9, 8, 1));
 
         //bisecting triangles
-        // for(int i = 0; i < recursionAmt; i++){
-        //     faces2 = new ArrayList<TriangleIndices>();
-        //     for(TriangleIndices tri : faces){
-        //         //replace the triangles for 4
-        //         //get the middle points of each triangle (a,b,c)
-        //         int a = tri.getV1().getMiddlePoint(tri.getV2());
-        //         int b = tri.getV2().getMiddlePoint(tri.getV3());
-        //         int c = tri.getV3().getMiddlePoint(tri.getV1());
-        //         faces2.add(new TriangleIndices(tri.getV1(),a,c));
-        //         faces2.add(new TriangleIndices(tri.getV2(),b,a));
-        //         faces2.add(new TriangleIndices(tri.getV3(),c,b));
-        //         faces2.add(new TriangleIndices(a,b,c));
-
-        //     }
-        //     faces = faces2;
-        // }
+        for(int i = 0; i < recursionAmt; i++){
+            faces2 = new ArrayList<TriangleIndices>();
+            for(int j = 0; j < faces.size(); j++){
+                //replace the triangles for 4
+                //get the middle points of each triangle (a,b,c)
+                int a = tri.getV1().getMiddlePoint(tri.getV2());
+                int b = tri.getV2().getMiddlePoint(tri.getV3());
+                int c = tri.getV3().getMiddlePoint(tri.getV1());
+                //3 vectors that get midpoints of the three vectors 
+                Vector3D newA = verticesArray.get(faces.get(j).getV1()).add(verticesArray.get(faces.get(j).getV2())).divide(2);
+                Vector3D newB = verticesArray.get(faces.get(j).getV2()).add(verticesArray.get(faces.get(j).getV3())).divide(2);
+                Vector3D newC = verticesArray.get(faces.get(j).getV3()).add(verticesArray.get(faces.get(j).getV1())).divide(2);
+                faces2.add(new TriangleIndices(tri.getV1(),a,c));
+                faces2.add(new TriangleIndices(tri.getV2(),b,a));
+                faces2.add(new TriangleIndices(tri.getV3(),c,b));
+                faces2.add(new TriangleIndices(a,b,c));
+            }
+            faces = faces2;
+        }
     }
     int getMiddlePoint(int p2){
         //first check if you already have it
@@ -89,9 +92,9 @@ class Icosahedron{
         for(int i = 0; i < faces.size(); i++){
             beginShape(TRIANGLES);
             //this SHOULD iterate thru each item in faces and therefore get the triangles and then draw them
-            Vector3D p1 = verticesArray[faces.get(i).getV1()].scale(radius);
-            Vector3D p2 = verticesArray[faces.get(i).getV2()].scale(radius);
-            Vector3D p3 = verticesArray[faces.get(i).getV3()].scale(radius);
+            Vector3D p1 = verticesArray.get(faces.get(i).getV1()).scale(radius);
+            Vector3D p2 = verticesArray.get(faces.get(i).getV2()).scale(radius);
+            Vector3D p3 = verticesArray.get(faces.get(i).getV3()).scale(radius);
             vertex((float)p1.x,(float)p1.y,(float)p1.z);
             vertex((float)p2.x,(float)p2.y,(float)p2.z);
             vertex((float)p3.x,(float)p3.y,(float)p3.z);
@@ -108,6 +111,8 @@ class Icosahedron{
 TRIANGLE STUFF:
 the formula of total vertices is (n^2 +2)/2 where n is the amt of vertices on the bottom (two vertice) side
 how to find amt of triangles on bottom? pattern: 2,3,5,9, (if u subtract initial val 2 it becomes 0,1,3,7 find an equation that follows that)]
+amt of vertices on bottom = 2*recursion -1
+amt of total vertices = ((bottom*bottom) + bottom) /2
 
 for get middle point:
 you need to find the mid point, add it to the faces2 array (being done) AND add it into the vertice array so it knows the vector of it

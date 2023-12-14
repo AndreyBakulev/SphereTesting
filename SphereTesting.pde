@@ -4,7 +4,7 @@ Sphere sphere;
 Vector3D[][] globe;
 NormalizedCube[] cubeFaces = new NormalizedCube[6];
 SpherifiedCube[] sCubeFaces = new SpherifiedCube[6];
-Icosahedron ico = new Icosahedron(1,100);
+Icosahedron ico = new Icosahedron(2,100);
 Vector3D[] direction = {new Vector3D(0,-1,0), new Vector3D(0,1,0),new Vector3D(1,0,0),new Vector3D(-1,0,0),new Vector3D(0,0,1),new Vector3D(0,0,-1)};
 int detail = 15;
 int radius = 100;
