@@ -107,5 +107,8 @@ class Icosahedron{
 
 TRIANGLE STUFF:
 the formula of total vertices is (n^2 +2)/2 where n is the amt of vertices on the bottom (two vertice) side
-how to find amt of triangles on bottom? pattern: 2,3,5,9, (if u subtract initial val 2 it becomes 0,1,3,7 find an equation that follows that)
+how to find amt of triangles on bottom? pattern: 2,3,5,9, (if u subtract initial val 2 it becomes 0,1,3,7 find an equation that follows that)]
+
+for get middle point:
+you need to find the mid point, add it to the faces2 array (being done) AND add it into the vertice array so it knows the vector of it
 */

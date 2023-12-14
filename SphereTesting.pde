@@ -55,11 +55,11 @@ void draw(){
 }
 void keyPressed(){
     if (key == CODED) {
-            if (keyCode == RIGHT) {
-                sphereMode ++;
-            }
-            if (keyCode == LEFT) {
-                sphereMode--; 
-            }
+        if (keyCode == RIGHT && sphereMode != 3) {
+            sphereMode ++;
         }
+        if (keyCode == LEFT && sphereMode != 0) {
+            sphereMode--; 
+        }
+    }
 }
