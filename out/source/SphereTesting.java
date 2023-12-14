@@ -22,21 +22,24 @@ PeasyCam cam;
 Sphere sphere;
 NormalizedCube nCube;
 Vector3D[][] globe;
-
+NormalizedCube[] cubeFaces = new NormalizedCube[6];
+Vector3D[] direction = {new Vector3D(0,-1,0), new Vector3D(0,1,0),new Vector3D(1,0,0),new Vector3D(-1,0,0),new Vector3D(0,0,1),new Vector3D(0,0,-1)};
 public void setup(){
     /* size commented out by preprocessor */;
-    Vector3D[] direction = {Vector3D.Up(),Vector3D.Down(),Vector3D.Left(),Vector3D.Right(),Vector3D.Forward(),Vector3D.Backward()};
     cam = new PeasyCam(this,500);
     sphere = new Sphere(0,0,0,30,30,200,globe);
-    for(int i = 0; i < direction.length; i++){
-        nCube = new NormalizedCube(20,direction[i],150);
-        nCube.constructCube();
-    } 
+
+    for(int i = 0; i < 6; i++){
+        cubeFaces[i] = new NormalizedCube(20,direction[i],150);
+        cubeFaces[i].constructCube();
+    }
+    
 }
 public void draw(){
     background(0);
-    //sphere.drawSphere();
-    nCube.drawCube();
+    for(int i = 0; i < 6; i++){
+        cubeFaces[i].drawCube();
+    }
 }
 class NormalizedCube{
     int resolution;
@@ -70,7 +73,6 @@ class NormalizedCube{
                     triangleArray[triIndex] = i;
                     triangleArray[triIndex+1] = i+resolution+1;
                     triangleArray[triIndex+2] = i+resolution;
-
                     triangleArray[triIndex+3] = i;
                     triangleArray[triIndex+4] = i+1;
                     triangleArray[triIndex+5] = i+resolution+1;
@@ -97,9 +99,9 @@ class NormalizedCube{
 
         for(int i = 0; i < triangleArray.length; i+=3){
             beginShape(TRIANGLES);
-            Vector3D p1 = (verticesArray[triangleArray[i]]).scale(radius);
-            Vector3D p2 = (verticesArray[triangleArray[i+1]]).scale(radius);
-            Vector3D p3 = (verticesArray[triangleArray[i+2]]).scale(radius);
+            Vector3D p1 = (verticesArray[triangleArray[i]]).normalize().scale(radius);
+            Vector3D p2 = (verticesArray[triangleArray[i+1]]).normalize().scale(radius);
+            Vector3D p3 = (verticesArray[triangleArray[i+2]]).normalize().scale(radius);
             vertex((float)p1.x,(float)p1.y,(float)p1.z);
             vertex((float)p2.x,(float)p2.y,(float)p2.z);
             vertex((float)p3.x,(float)p3.y,(float)p3.z);
@@ -187,12 +189,6 @@ class Vector3D{
   public double x;
   public double y;
   public double z;
-  public static Vector3D Up(){ return new Vector3D(0,1,0);}
-  public static Vector3D Down(){ return new Vector3D(0,-1,0);}
-  public static Vector3D Left(){ return new Vector3D(-1,0,0);}
-  public static Vector3D Right(){ return new Vector3D(1,0,0);}
-  public static Vector3D Forward(){ return new Vector3D(0,0,-1);}
-  public static Vector3D Backward(){ return new Vector3D(0,0,1);}
   public Vector3D(double x, double y, double z){
     this.x = x;
     this.y = y;
@@ -237,6 +233,12 @@ class Vector3D{
   public String toString(){
     return "(" + x + ", " + y + ", " + z + ")";
   }
+  public  Vector3D Up(){ return new Vector3D(0,1,0);}
+  public  Vector3D Down(){ return new Vector3D(0,-1,0);}
+  public  Vector3D Left(){ return new Vector3D(-1,0,0);}
+  public  Vector3D Right(){ return new Vector3D(1,0,0);}
+  public  Vector3D Forward(){ return new Vector3D(0,0,-1);}
+  public  Vector3D Backward(){ return new Vector3D(0,0,1);}
 }
 
 

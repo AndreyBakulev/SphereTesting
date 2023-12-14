@@ -30,7 +30,6 @@ class NormalizedCube{
                     triangleArray[triIndex] = i;
                     triangleArray[triIndex+1] = i+resolution+1;
                     triangleArray[triIndex+2] = i+resolution;
-
                     triangleArray[triIndex+3] = i;
                     triangleArray[triIndex+4] = i+1;
                     triangleArray[triIndex+5] = i+resolution+1;
@@ -57,9 +56,9 @@ class NormalizedCube{
 
         for(int i = 0; i < triangleArray.length; i+=3){
             beginShape(TRIANGLES);
-            Vector3D p1 = (verticesArray[triangleArray[i]]).scale(radius);
-            Vector3D p2 = (verticesArray[triangleArray[i+1]]).scale(radius);
-            Vector3D p3 = (verticesArray[triangleArray[i+2]]).scale(radius);
+            Vector3D p1 = (verticesArray[triangleArray[i]]).normalize().scale(radius);
+            Vector3D p2 = (verticesArray[triangleArray[i+1]]).normalize().scale(radius);
+            Vector3D p3 = (verticesArray[triangleArray[i+2]]).normalize().scale(radius);
             vertex((float)p1.x,(float)p1.y,(float)p1.z);
             vertex((float)p2.x,(float)p2.y,(float)p2.z);
             vertex((float)p3.x,(float)p3.y,(float)p3.z);

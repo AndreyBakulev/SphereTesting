@@ -2,12 +2,6 @@ class Vector3D{
   public double x;
   public double y;
   public double z;
-  public static Vector3D Up(){ return new Vector3D(0,1,0);}
-  public static Vector3D Down(){ return new Vector3D(0,-1,0);}
-  public static Vector3D Left(){ return new Vector3D(-1,0,0);}
-  public static Vector3D Right(){ return new Vector3D(1,0,0);}
-  public static Vector3D Forward(){ return new Vector3D(0,0,-1);}
-  public static Vector3D Backward(){ return new Vector3D(0,0,1);}
   public Vector3D(double x, double y, double z){
     this.x = x;
     this.y = y;
@@ -52,4 +46,10 @@ class Vector3D{
   public String toString(){
     return "(" + x + ", " + y + ", " + z + ")";
   }
+  public  Vector3D Up(){ return new Vector3D(0,1,0);}
+  public  Vector3D Down(){ return new Vector3D(0,-1,0);}
+  public  Vector3D Left(){ return new Vector3D(-1,0,0);}
+  public  Vector3D Right(){ return new Vector3D(1,0,0);}
+  public  Vector3D Forward(){ return new Vector3D(0,0,-1);}
+  public  Vector3D Backward(){ return new Vector3D(0,0,1);}
 }
