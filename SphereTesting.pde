@@ -25,16 +25,6 @@ void setup(){
 }
 void draw(){
     background(0);
-    if (keyPressed) {
-        if (key == CODED) {
-            if (keyCode == RIGHT) {
-                sphereMode ++;
-            }
-            if (keyCode == LEFT) {
-                sphereMode--; 
-            }
-        }
-    }
     switch(sphereMode){
         case 0: 
             ico.draw();
@@ -58,12 +48,18 @@ void draw(){
         break;
     } 
     textAlign(CENTER);
-    textSize(100);
+    textSize(75);
     fill(0,408,612);
     text(currentShape,0,-200);
     fill(255);
-    text(sphereMode,0,-180);
 }
 void keyPressed(){
-    
+    if (key == CODED) {
+            if (keyCode == RIGHT) {
+                sphereMode ++;
+            }
+            if (keyCode == LEFT) {
+                sphereMode--; 
+            }
+        }
 }

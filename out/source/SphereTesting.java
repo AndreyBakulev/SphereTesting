@@ -44,21 +44,6 @@ public void setup(){
 }
 public void draw(){
     background(0);
-    // ico.draw();
-    // for(int i = 0; i < 6; i++){
-    //     //sCubeFaces[i].drawCube();
-    //     //cubeFaces[i].drawCube();
-    // }
-    if (keyPressed) {
-        if (key == CODED) {
-            if (keyCode == RIGHT) {
-                sphereMode ++;
-            }
-            if (keyCode == LEFT) {
-                sphereMode--; 
-            }
-        }
-    }
     switch(sphereMode){
         case 0: 
             ico.draw();
@@ -82,11 +67,20 @@ public void draw(){
         break;
     } 
     textAlign(CENTER);
-    textSize(100);
+    textSize(75);
     fill(0,408,612);
     text(currentShape,0,-200);
     fill(255);
-    text(sphereMode,0,-180);
+}
+public void keyPressed(){
+    if (key == CODED) {
+            if (keyCode == RIGHT) {
+                sphereMode ++;
+            }
+            if (keyCode == LEFT) {
+                sphereMode--; 
+            }
+        }
 }
 class Icosahedron{
     int resolution;
