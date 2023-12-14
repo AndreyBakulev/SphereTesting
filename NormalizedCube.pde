@@ -39,21 +39,6 @@ class NormalizedCube{
         }
     }
     void drawCube(){
-        // copy mesh filters part of code into here (use beginShape and endShape)
-        // for(int i = 0; i < resolution; i++){
-        //     beginShape(TRIANGLES);
-        //     for(int j = 0; j < resolution; j+=3){
-        //         PVector p1 = verticesArray[triangleArray[j+(i*resolution)]];
-        //         PVector p2 = verticesArray[triangleArray[j+(i*resolution+1)]];
-        //         PVector p3 = verticesArray[triangleArray[j+(i*resolution+2)]];
-        //         vertex(p1.x,p1.y,p1.z);
-        //         vertex(p2.x,p2.y,p2.z);
-        //         vertex(p3.x,p3.y,p3.z);
-        //         println(p2.x);
-        //     }
-        //     endShape();
-        // }
-
         for(int i = 0; i < triangleArray.length; i+=3){
             beginShape(TRIANGLES);
             Vector3D p1 = (verticesArray[triangleArray[i]]).normalize().scale(radius);
