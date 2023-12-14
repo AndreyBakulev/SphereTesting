@@ -20,26 +20,112 @@ public class SphereTesting extends PApplet {
 
 PeasyCam cam;
 Sphere sphere;
-PVector[][] globe;
+NormalizedCube nCube;
+Vector3D[][] globe;
+
 public void setup(){
     /* size commented out by preprocessor */;
+    Vector3D[] direction = {Vector3D.Up(),Vector3D.Down(),Vector3D.Left(),Vector3D.Right(),Vector3D.Forward(),Vector3D.Backward()};
     cam = new PeasyCam(this,500);
     sphere = new Sphere(0,0,0,30,30,200,globe);
-    
+    for(int i = 0; i < direction.length; i++){
+        nCube = new NormalizedCube(20,direction[i],150);
+        nCube.constructCube();
+    } 
 }
 public void draw(){
     background(0);
-    sphere.drawSphere("normalized cube");
+    //sphere.drawSphere();
+    nCube.drawCube();
 }
+class NormalizedCube{
+    int resolution;
+    Vector3D localUp;
+    Vector3D axisA;
+    Vector3D axisB;
+    Vector3D[] verticesArray;
+    int[] triangleArray;
+    int radius;
+    public NormalizedCube(int resolution, Vector3D localUp, int radius){
+        this.resolution = resolution;
+        this.localUp = localUp;
+        axisA = new Vector3D(localUp.y, localUp.z, localUp.x);
+        axisB = localUp.cross(axisA);
+        this.radius = radius;
+    }
+    public void constructCube(){
+        verticesArray = new Vector3D[resolution*resolution];
+        triangleArray = new int[((resolution-1)*(resolution-1))*6];
+        int triIndex = 0;
+        for(double y = 0; y < resolution; y++){
+            for(double x = 0; x < resolution; x++){
+                int i = (int) (x+(y*resolution));
+                Vector2D percentDone = new Vector2D(x/(resolution-1),y/(resolution-1));
+                Vector3D pointOnUnitCube = localUp.add(axisA.scale(((percentDone.x -.5f)*2))).add(axisB.scale(((percentDone.y -.5f)*2)));
+                //println(pointOnUnitCube.x + " " + pointOnUnitCube.y + " " + pointOnUnitCube.z);
+                //println(percentDone);
+                verticesArray[i] = pointOnUnitCube;
+
+                if(x != resolution-1  && y != resolution-1){
+                    triangleArray[triIndex] = i;
+                    triangleArray[triIndex+1] = i+resolution+1;
+                    triangleArray[triIndex+2] = i+resolution;
+
+                    triangleArray[triIndex+3] = i;
+                    triangleArray[triIndex+4] = i+1;
+                    triangleArray[triIndex+5] = i+resolution+1;
+                    triIndex+= 6;
+                }
+            }
+        }
+    }
+    public void drawCube(){
+        // copy mesh filters part of code into here (use beginShape and endShape)
+        // for(int i = 0; i < resolution; i++){
+        //     beginShape(TRIANGLES);
+        //     for(int j = 0; j < resolution; j+=3){
+        //         PVector p1 = verticesArray[triangleArray[j+(i*resolution)]];
+        //         PVector p2 = verticesArray[triangleArray[j+(i*resolution+1)]];
+        //         PVector p3 = verticesArray[triangleArray[j+(i*resolution+2)]];
+        //         vertex(p1.x,p1.y,p1.z);
+        //         vertex(p2.x,p2.y,p2.z);
+        //         vertex(p3.x,p3.y,p3.z);
+        //         println(p2.x);
+        //     }
+        //     endShape();
+        // }
+
+        for(int i = 0; i < triangleArray.length; i+=3){
+            beginShape(TRIANGLES);
+            Vector3D p1 = (verticesArray[triangleArray[i]]).scale(radius);
+            Vector3D p2 = (verticesArray[triangleArray[i+1]]).scale(radius);
+            Vector3D p3 = (verticesArray[triangleArray[i+2]]).scale(radius);
+            vertex((float)p1.x,(float)p1.y,(float)p1.z);
+            vertex((float)p2.x,(float)p2.y,(float)p2.z);
+            vertex((float)p3.x,(float)p3.y,(float)p3.z);
+            //println(p1.y);
+            
+            endShape();
+        }
+    }
+}
+
+/*
+p1 x=0 , y= 1, z = -20
+p2 x=0 , y= 1, z = -20
+
+PROBLEMS:
+percentDone rounds to int so thats fs a problem
+*/
 class Sphere{
 float x, y, z, r;
     int w, h;
-    PVector[][] globe;
+    Vector3D[][] globe;
     int[][] greyScale;
     int groundLevel = 30;
     int altitude;
     
-    Sphere(float x, float y, float z, int w, int h, float r, PVector[][] globe) {
+    Sphere(float x, float y, float z, int w, int h, float r, Vector3D[][] globe) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -49,47 +135,108 @@ float x, y, z, r;
         this.globe = globe;
     }
 
-    public void drawSphere(String sphereType){
-        if(sphereType.equals("standard")){
-            sphere(r);
-            sphereDetail(w);
-        }
-        if(sphereType.equals("normalized cube")){
-            //make a cube and iterate thru and get the vectors
-            //then normalize them and multiply by radius
-            
-            /* MAKING CUBE
-            make 6 edges (each one having a local up dir, and an axis A and B based off that)
-            find axis a by swapping localup x,y,z 
-            find axis b by doing cross product of axis a and local up
-
-            CONSTRUCTCUBE(){
-            verticeArray(make a vector array of resolution*resoluiton)
-            triangleArray(make an int array for amt of triangles ((resolution-1*resolution-1)*2(2 triangles per area) * 3(amt of vertexes per triangle))
-
-            DOUBLE FOR LOOP
-            make a 2D percentDone vector (new vector (i,j) / resolution-1)
-
-            make 3D vector pointoncube (add one of localUp variable)
-            localup + ((percent.x - .5)*2)(we start in middle of side, so subtract .5 to get to edge and *2 to compensate)
-
-            }
-            */
-        }
+    public void drawSphere(){
+         sphere(r);
+        sphereDetail(w);
+        
     }
-    public void constructCube(){
-        PVector[] verticesArray = new PVector[radius*radius];
-        int[] triangleArray = new int[((radius-1)*(radius-1))*6];
+    
+}
+class Vector2D{
+  public double x;
+  public double y;
 
-        for(int y = 0; y < radius; y++){
-            for(int x = 0; x < radius; x++){
-                int i = x+y*radius;
-                PVector percentDone = new PVector(x/(radius-1),y/(radius-1));
-                PVector pointOnUnitCube = localUp + (percentDone.x -.5f)*2 * axisA + (percentDone.-5)*2 * axisB;
-                verticesArray[i] = pointOnUnitCube;
-            }
-        }
-    }
+  public Vector2D(double x, double y){
+    this.x = x;
+    this.y = y;
+    
+  }
+  public double getX(){
+    return x;
+  }
+  public double getY(){
+    return y;
+  }
+  public void applyForce(Vector2D force){
+    x = x + force.getX();
+    y = y + force.getY();
+  }
+  public Vector2D scale(double scalar){
+    return new Vector2D(x*scalar,y*scalar);
+  }
+  public Vector2D add(Vector2D v){
+    return new Vector2D(x+v.getX(),y+v.getY());
+  }
+  public Vector2D subtract(Vector2D v){
+    return new Vector2D(x-v.getX(),y-v.getY());
+  }
+  public double dot(Vector2D v){
+    return (x*v.getX() + y*v.getY());
+  }
+  public double length(){
+    return Math.sqrt(this.dot(this));
+  }
+  public Vector2D normalize(){
+    return this.scale(1/this.length());
+  }
+   public String toString(){
+    return "(" + x + ", " + y + ")";
+  }
+}
+class Vector3D{
+  public double x;
+  public double y;
+  public double z;
+  public static Vector3D Up(){ return new Vector3D(0,1,0);}
+  public static Vector3D Down(){ return new Vector3D(0,-1,0);}
+  public static Vector3D Left(){ return new Vector3D(-1,0,0);}
+  public static Vector3D Right(){ return new Vector3D(1,0,0);}
+  public static Vector3D Forward(){ return new Vector3D(0,0,-1);}
+  public static Vector3D Backward(){ return new Vector3D(0,0,1);}
+  public Vector3D(double x, double y, double z){
+    this.x = x;
+    this.y = y;
+    this.z = z;
+  }
+  public double getx(){
+    return x;
+  }
+  public double gety(){
+    return y;
+  }
+  public double getz(){
+    return z;
+  }
+  public void applyForce(Vector3D force){
+    x = x + force.getx();
+    y = y + force.gety();
+    z = z + force.getz();
+  }
+  public Vector3D scale(double scalar){
+    return new Vector3D(x*scalar,y*scalar,z*scalar);
+  }
+  public Vector3D add(Vector3D v){
+    return new Vector3D(x+v.getx(),y+v.gety(),z+v.getz());
+  }
+  public Vector3D subtract(Vector3D v){
+    return new Vector3D(x-v.getx(),y-v.gety(),z-v.getz());
+  }
+  public double dot(Vector3D v){
+    return (x*v.getx() + y*v.gety() + z*v.getz());
+  }
+  public double length(){
+    return Math.sqrt(this.dot(this));
+  }
+  public Vector3D normalize(){
+    return this.scale(1/this.length());
+  }
+  public Vector3D cross(Vector3D v){
+    return new Vector3D((this.y*v.z) - (this.z*v.y),(this.z*v.x)- (this.x*v.z), (this.x*v.y)-(this.y*v.x));
+  }
+
+  public String toString(){
+    return "(" + x + ", " + y + ", " + z + ")";
+  }
 }
 
 
