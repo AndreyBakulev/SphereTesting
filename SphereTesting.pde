@@ -1,14 +1,14 @@
 import peasy.*;
 PeasyCam cam;
+int detail = 15;
+int radius = 100;
+int sphereMode = 0;
 Sphere sphere;
 Vector3D[][] globe;
 NormalizedCube[] cubeFaces = new NormalizedCube[6];
 SpherifiedCube[] sCubeFaces = new SpherifiedCube[6];
-Icosahedron ico = new Icosahedron(2,100);
+Icosahedron ico = new Icosahedron(3,radius);
 Vector3D[] direction = {new Vector3D(0,-1,0), new Vector3D(0,1,0),new Vector3D(1,0,0),new Vector3D(-1,0,0),new Vector3D(0,0,1),new Vector3D(0,0,-1)};
-int detail = 15;
-int radius = 100;
-int sphereMode = 0;
 String currentShape = "Icosahedron";
 void setup(){
     size(800,800,P3D);
