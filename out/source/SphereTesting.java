@@ -19,14 +19,15 @@ public class SphereTesting extends PApplet {
 
 
 PeasyCam cam;
-int detail = 15;
-int radius = 100;
-int sphereMode = 0;
+int detail = Controller.DETAIL;
+int radius = Controller.RADIUS;
+int sphereMode = Controller.SPHERE_MODE;
+int icoRecursive = Controller.ICO_RECURSIVE;
 Sphere sphere;
 Vector3D[][] globe;
 NormalizedCube[] cubeFaces = new NormalizedCube[6];
 SpherifiedCube[] sCubeFaces = new SpherifiedCube[6];
-Icosahedron ico = new Icosahedron(3,radius);
+Icosahedron ico = new Icosahedron(icoRecursive,radius);
 Vector3D[] direction = {new Vector3D(0,-1,0), new Vector3D(0,1,0),new Vector3D(1,0,0),new Vector3D(-1,0,0),new Vector3D(0,0,1),new Vector3D(0,0,-1)};
 String currentShape = "Icosahedron";
 public void setup(){
@@ -80,7 +81,21 @@ public void keyPressed(){
         if (keyCode == LEFT && sphereMode != 0) {
             sphereMode--; 
         }
+        // if (keyCode == UP) {
+        //     icoRecursive++;
+        //     ico.createMesh();
+        // }
+        // if (keyCode == DOWN && icoRecursive > 0) {
+        //     icoRecursive--;
+        //     ico.createMesh();
+        // }
     }
+}
+class Controller{
+public static final int DETAIL = 15;
+public static final int RADIUS = 100;
+public static final int SPHERE_MODE = 0;
+public static final int ICO_RECURSIVE = 2;
 }
 class Icosahedron{
     int resolution;
@@ -149,14 +164,10 @@ class Icosahedron{
         //bisecting triangles
         for(int i = 0; i < recursionAmt; i++){
             faces2 = new ArrayList<TriangleIndices>();
-
             for(int j = 0; j < faces.size(); j++){
                 //replace the triangles for 4
                 //get the middle points of each triangle (a,b,c)
                 TriangleIndices tri = faces.get(j);
-                //should be getting the midpoint and adding it into the list
-                //a,b,c can be any numbers??? bc they are just mapped to the hashmap???
-                //i think a,b,c have to result in number of like 12 + 1 bc the first 12 are already taken
                 int a = faces.size() + (j*3);
                 int b = faces.size() + (j*3) + 1;
                 int c = faces.size() + (j*3) + 2;
@@ -168,19 +179,12 @@ class Icosahedron{
                 faces2.add(new TriangleIndices(tri.getV2(),b,a));
                 faces2.add(new TriangleIndices(tri.getV3(),c,b));
                 faces2.add(new TriangleIndices(a,b,c));
-                //adding vectors into hashmap with a vector from newA. (i think the order doesnt matter)
                 verticesDict.put(a,newA);
                 verticesDict.put(b,newB);
                 verticesDict.put(c,newC);
             }
             faces = faces2;
         }
-    }
-    public int getMiddlePoint(int p2){
-        //first check if you already have it
-        //if not, get it ((vector1.add(vector2).scale(.5))
-        //how do I add it to the verticesArray list?
-        return 0;
     }
     public void draw(){
         for(int i = 0; i < faces.size(); i++){

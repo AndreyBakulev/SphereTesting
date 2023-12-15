@@ -65,14 +65,10 @@ class Icosahedron{
         //bisecting triangles
         for(int i = 0; i < recursionAmt; i++){
             faces2 = new ArrayList<TriangleIndices>();
-
             for(int j = 0; j < faces.size(); j++){
                 //replace the triangles for 4
                 //get the middle points of each triangle (a,b,c)
                 TriangleIndices tri = faces.get(j);
-                //should be getting the midpoint and adding it into the list
-                //a,b,c can be any numbers??? bc they are just mapped to the hashmap???
-                //i think a,b,c have to result in number of like 12 + 1 bc the first 12 are already taken
                 int a = faces.size() + (j*3);
                 int b = faces.size() + (j*3) + 1;
                 int c = faces.size() + (j*3) + 2;
@@ -84,19 +80,12 @@ class Icosahedron{
                 faces2.add(new TriangleIndices(tri.getV2(),b,a));
                 faces2.add(new TriangleIndices(tri.getV3(),c,b));
                 faces2.add(new TriangleIndices(a,b,c));
-                //adding vectors into hashmap with a vector from newA. (i think the order doesnt matter)
                 verticesDict.put(a,newA);
                 verticesDict.put(b,newB);
                 verticesDict.put(c,newC);
             }
             faces = faces2;
         }
-    }
-    int getMiddlePoint(int p2){
-        //first check if you already have it
-        //if not, get it ((vector1.add(vector2).scale(.5))
-        //how do I add it to the verticesArray list?
-        return 0;
     }
     void draw(){
         for(int i = 0; i < faces.size(); i++){

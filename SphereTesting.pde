@@ -1,13 +1,14 @@
 import peasy.*;
 PeasyCam cam;
-int detail = 15;
-int radius = 100;
-int sphereMode = 0;
+int detail = Controller.DETAIL;
+int radius = Controller.RADIUS;
+int sphereMode = Controller.SPHERE_MODE;
+int icoRecursive = Controller.ICO_RECURSIVE;
 Sphere sphere;
 Vector3D[][] globe;
 NormalizedCube[] cubeFaces = new NormalizedCube[6];
 SpherifiedCube[] sCubeFaces = new SpherifiedCube[6];
-Icosahedron ico = new Icosahedron(3,radius);
+Icosahedron ico = new Icosahedron(icoRecursive,radius);
 Vector3D[] direction = {new Vector3D(0,-1,0), new Vector3D(0,1,0),new Vector3D(1,0,0),new Vector3D(-1,0,0),new Vector3D(0,0,1),new Vector3D(0,0,-1)};
 String currentShape = "Icosahedron";
 void setup(){
@@ -61,5 +62,13 @@ void keyPressed(){
         if (keyCode == LEFT && sphereMode != 0) {
             sphereMode--; 
         }
+        // if (keyCode == UP) {
+        //     icoRecursive++;
+        //     ico.createMesh();
+        // }
+        // if (keyCode == DOWN && icoRecursive > 0) {
+        //     icoRecursive--;
+        //     ico.createMesh();
+        // }
     }
 }
